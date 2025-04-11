@@ -1,0 +1,145 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+.heading {
+	font-size: 2em;
+	color: #333;
+	text-align: center;
+	margin-block-end: 2rem;
+	padding-block-end: 1rem;
+	border-bottom: 1px solid purple;
+	color: purple;
+}
+
+.container {
+	background-color: #f0f0f0;
+	min-height: 100vh;
+	padding-block: 1.5rem;
+	padding-inline: 1rem;
+}
+
+.todo {
+	max-width: 800px;
+	margin-inline: auto;
+	background-color: #fff;
+	padding-block: 1.5rem;
+	padding-inline: 1rem;
+	border-radius: 0.5rem;
+	min-height: 80vh;
+}
+
+.input {
+	width: 100%;
+	padding-inline: 1rem;
+	padding-block: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 0.5rem;
+	margin-bottom: 1rem;
+	display: block;
+	font-size: 1rem;
+	color: #333;
+	outline: none;
+	transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input:focus {
+	border-color: purple;
+	box-shadow: 0 0 0 2px rgba(128, 0, 128, 0.2);
+}
+
+.input::placeholder {
+	transition: color 0.3s;
+	color: #aaa;
+}
+
+.btn {
+	display: inline-block;
+	padding-block: 1rem;
+	padding-inline: 2rem;
+	border-radius: 0.5em;
+	background-color: purple;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+	transition: background-color 300ms, transform 300ms;
+	width: 100%;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	margin-block-end: 2rem;
+}
+
+.ul {
+	list-style: none;
+	padding-inline-start: 0;
+}
+
+.li {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: center;
+	padding-block: 1rem;
+	padding-inline: 1rem;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item:last-child {
+	border-bottom: none;
+}
+
+.todoItem {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #333;
+}
+
+.wrapper {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.completed {
+	background-color: green;
+	color: #fff;
+	font-weight: 600;
+	font-size: 1rem;
+	padding-block: 0.5rem;
+	padding-inline: 1rem;
+}
+
+.notCompleted {
+	background-color: #dadada;
+	color: #333;
+	font-weight: 600;
+	font-size: 1rem;
+	padding-block: 0.5rem;
+	padding-inline: 1rem;
+}
+
+.markComplete {
+	background-color: transparent;
+	color: green;
+	font-size: 1rem;
+	padding-block: 0.2rem;
+	padding-inline: 0.5rem;
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.trash {
+	background-color: transparent;
+	color: red;
+	font-size: 1rem;
+	padding-block: 0.2rem;
+	padding-inline: 0.5rem;
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
