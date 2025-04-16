@@ -8,7 +8,10 @@ const Todo = () => {
 	const [todos, setTodos] = useState([]);
 	const [todo, setTodo] = useState('');
 
-	useEffect(() => {});
+	useEffect(() => {
+		//////
+		return () => {};
+	}, [todo]);
 
 	const handleInputChange = e => {
 		const { value } = e.target;
