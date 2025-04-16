@@ -3,7 +3,13 @@ import TodoList from './todoList';
 import './styles.css';
 
 const Todo = () => {
-	const [todos, setTodos] = useState([]);
+	const [todos, setTodos] = useState(
+		(JSON.parse(localStorage.getItem('todos')) || []).map(todo => ({
+			...todo,
+			id: parseInt(todo.id),
+		}))
+	);
+
 	const [todo, setTodo] = useState('');
 
 	const handleInputChange = e => {
@@ -23,6 +29,7 @@ const Todo = () => {
 		};
 
 		setTodos(prevTodos => [...prevTodos, newTodo]);
+		localStorage.setItem('todos', JSON.stringify([...todos, newTodo]));
 		setTodo('');
 	};
 
