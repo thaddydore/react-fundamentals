@@ -1,12 +1,14 @@
 import './styles.css';
 import { useNavigate } from 'react-router-dom';
 
-const TodoList = ({ todos, handleMarkComplete, handleTrash }) => {
+const TodoList = ({ todos, handleMarkComplete, handleTrash, isDeleting }) => {
 	const navigate = useNavigate();
 
 	const handleEditTodo = id => {
 		navigate(`/edit/${id}`);
 	};
+
+	const deleteItem = '🗑️';
 
 	return (
 		<ul className='ul'>
@@ -29,7 +31,7 @@ const TodoList = ({ todos, handleMarkComplete, handleTrash }) => {
 						)}
 
 						<button className='trash' onClick={() => handleTrash(todo.id)}>
-							&#128465;
+							{isDeleting ? 'Deleting...' : deleteItem}
 						</button>
 						<button className='trash' onClick={() => handleEditTodo(todo.id)}>
 							&#9999;
