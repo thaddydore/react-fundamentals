@@ -1,89 +1,89 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TodoList from './todoList';
 import './styles.css';
 import { request } from '../util/request';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 // fecth method  or axios
 
 const Todo = () => {
-	const [todos, setTodos] = useState([]);
 	const [todo, setTodo] = useState('');
-	const [loading, setLoading] = useState(true);
-	const [iscreating, setIsCreating] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [error, setError] = useState(null);
 
-	useEffect(() => {
-		fetchTodos('/todos');
-	}, []);
+	const { data, isLoading, error, isError, refetch } = useQuery({
+		queryKey: ['todos'],
+		queryFn: async () => {
+			const { data } = await request.get('/todos');
+			return data;
+		},
+	});
 
-	async function fetchTodos(url) {
-		setLoading(true);
-		setError(null);
+	const postTodoMutation = useMutation({
+		mutationFn: async todo => {
+			const { data } = await request.post('/todos', todo);
+			return data;
+		},
+		onSuccess: () => {
+			refetch();
+			setTodo('');
+			alert('Todo added successfully');
+		},
+		onError: error => {
+			const errorMessage = error?.response?.data?.message ? error?.response?.data?.message : error?.message;
+			alert(errorMessage);
+		},
+	});
 
-		try {
-			const { data: todo } = await request.get(url);
+	const markCompleteMutation = useMutation({
+		mutationFn: async id => {
+			return await request.put(`/todos/${id}`, {
+				completed: true,
+			});
+		},
+		onSuccess: () => {
+			refetch();
+			alert('Todo completed successfully');
+		},
+		onError: error => {
+			const errorMessage = error?.response?.data?.message ? error?.response?.data?.message : error?.message;
+			alert(errorMessage);
+		},
+	});
 
-			setTodos(todo);
-		} catch (error) {
-			const errorMessage = error.response.data.message ? error.response.data.message : error.message;
-			setError(errorMessage);
-		} finally {
-			setLoading(false);
-		}
-	}
+	const trashMutation = useMutation({
+		mutationFn: async id => {
+			return await request.delete(`/todos/${id}`);
+		},
+		onSuccess: () => {
+			refetch();
+			alert('Todo deleted successfully');
+		},
+		onError: error => {
+			const errorMessage = error?.response?.data?.message ? error?.response?.data?.message : error?.message;
+			alert(errorMessage);
+		},
+	});
+
+	const todos = data || [];
+
+	const errorMessage = error?.response?.data?.message ? error?.response?.data?.message : error?.message;
 
 	const handleInputChange = e => {
 		const { value } = e.target;
 		setTodo(value);
 	};
 
-	const handleAddTodo = async e => {
+	const handleAddTodo = e => {
 		e.preventDefault();
 		if (!todo) return;
-		setError(null);
-		setIsCreating(true);
-
-		try {
-			const { data: newTodo } = await request.post('/todos', { name: todo });
-
-			setTodos(prevTodos => [...prevTodos, newTodo]);
-
-			setTodo('');
-			alert('Todo added successfully');
-		} catch (error) {
-			const errorMessage = error.response.data.message ? error.response.data.message : error.message;
-			setError(errorMessage);
-		} finally {
-			setIsCreating(false);
-		}
+		postTodoMutation.mutate({ name: todo });
 	};
 
-	const handleMarkComplete = async id => {
-		try {
-			await request.get(`/todos/${id}`);
-
-			setTodos(prevTodos => prevTodos.map(todo => (todo.id === id ? { ...todo, completed: true } : todo)));
-		} catch (error) {
-			const errorMessage = error.response.data.message ? error.response.data.message : error.message;
-			setError(errorMessage);
-		}
+	const handleMarkComplete = id => {
+		markCompleteMutation.mutate(id);
 	};
 
-	const handleTrash = async id => {
-		setError(null);
-		setIsDeleting(true);
-		try {
-			await request.delete(`/todos/${id}`);
-
-			setTodos(prev => prev.filter(todo => todo.id !== id));
-			alert('Todo deleted successfully');
-		} catch (error) {
-			const errorMessage = error.response.data.message ? error.response.data.message : error.message;
-			setError(errorMessage);
-		} finally {
-			setIsDeleting(false);
-		}
+	const handleTrash = id => {
+		trashMutation.mutate(id);
 	};
 
 	return (
@@ -97,21 +97,21 @@ const Todo = () => {
 						onChange={handleInputChange}
 						value={todo}
 						className='input'
-						disabled={iscreating}
+						disabled={postTodoMutation.isLoading}
 					/>
-					<button type='submit' className='btn' disabled={iscreating}>
-						{iscreating ? 'Creating...' : 'Add'}
+					<button type='submit' className='btn' disabled={postTodoMutation.isLoading}>
+						{postTodoMutation.isLoading ? 'Creating...' : 'Add'}
 					</button>
 				</form>
 
-				{loading && <p>Loading...</p>}
-				{error && <p className='error'>{error}</p>}
-				{todos.length === 0 && !loading && <p className='empty'>No todos available</p>}
+				{isLoading && <p>Loading...</p>}
+				{isError && <p className='error'>{errorMessage}</p>}
+				{todos.length === 0 && !isLoading && <p className='empty'>No todos available</p>}
 				<TodoList
 					todos={todos}
 					handleMarkComplete={handleMarkComplete}
 					handleTrash={handleTrash}
-					isDeleting={isDeleting}
+					isDeleting={trashMutation.isLoading}
 				/>
 			</div>
 		</main>
