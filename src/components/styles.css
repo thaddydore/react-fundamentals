@@ -154,3 +154,28 @@
 	outline: none;
 	cursor: pointer;
 }
+
+.switch-button {
+	background-color: transparent;
+	color: purple;
+	font-size: 1rem;
+	padding-block: 0.2rem;
+	padding-inline: 0.5rem;
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+
+.light {
+	backgroudn-color: #fff;
+	color: purple;
+	border: 1px solid purple;
+	border-radius: 0.5em;
+}
+
+.dark {
+	backgroudn-color: purple;
+	color: #fff;
+	border: 1px solid purple;
+	border-radius: 0.5em;
+}

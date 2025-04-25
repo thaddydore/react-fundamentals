@@ -12,11 +12,14 @@ const queryClient = new QueryClient({
 	},
 });
 import { routes } from './App';
+import ThemeProvider from './themeProvider';
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={routes} />
+			<ThemeProvider>
+				<RouterProvider router={routes} />
+			</ThemeProvider>
 		</QueryClientProvider>
 	</StrictMode>
 );
